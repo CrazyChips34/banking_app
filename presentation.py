@@ -8,10 +8,11 @@ master = Tk()
 master.title('Banking App')
 
 # Global Variables
-balance_label = "None"
 transaction_notif = "None"
 
-# Functions
+
+# Functions+
+notif:None
 def finish_reg():
     global notif
     name = temp_name.get()
@@ -126,6 +127,7 @@ def login():
     
 def perform_transaction(transaction_type, amount):
     global balance_label, transaction_notif
+    
 
     account_filename = temp_login_name.get()
     account_file_path = os.path.join(os.getcwd(), account_filename)
@@ -155,7 +157,7 @@ def perform_transaction(transaction_type, amount):
                 account_file.seek(0)
                 account_file.writelines(file_data)
                 account_file.truncate()
-                balance_label(text="Balance: R{}".format(balance))
+                balance_label.config(text="Balance: R{}".format(balance))
                 transaction_notif.config(fg="green", text="Withdrawal successful")
             else:
                 transaction_notif.config(fg="red", text="Insufficient funds")
@@ -170,10 +172,8 @@ def perform_transaction(transaction_type, amount):
 
     #account_file.close()
 
-
 def withdraw():
     global balance_label, transaction_notif
-
 
     withdraw_screen = Toplevel(master)
     withdraw_screen.title('Withdraw')
@@ -184,7 +184,7 @@ def withdraw():
     Label(withdraw_screen, text="").grid(row=2, sticky=N, pady=5)
 
     # Entry
-    withdraw_amount = StringVar()
+    withdraw_amount = IntVar()
     Entry(withdraw_screen, textvariable=withdraw_amount).grid(row=1, column=1, padx=5)
 
     # Button
@@ -207,7 +207,7 @@ def deposit():
     Label(deposit_screen, text="").grid(row=2, sticky=N, pady=5)
 
     # Entry
-    deposit_amount = StringVar()
+    deposit_amount = IntVar()
     Entry(deposit_screen, textvariable=deposit_amount).grid(row=1, column=1, padx=5)
 
     # Button
@@ -218,10 +218,9 @@ def deposit():
     transaction_notif = Label(deposit_screen, font=('Calibri', 12))
     transaction_notif.grid(row=4, sticky=N, pady=10)
 
-
-
 # Account Dashboard
 def show_account_dashboard(login_name):
+    global balance_label
     master.withdraw()
     account_dashboard = Toplevel(master)
     account_dashboard.title('Dashboard')
