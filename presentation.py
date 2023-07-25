@@ -2,6 +2,7 @@
 from tkinter import *
 import os
 import re
+from datetime import datetime
 from PIL import Image, ImageTk
 
 # Main Screen
@@ -103,9 +104,21 @@ def register():
     Entry(register_screen, textvariable=temp_age).grid(row=2, column=0)
     Entry(register_screen, textvariable=temp_gender).grid(row=3, column=0)
     Entry(register_screen, textvariable=temp_password, show="*").grid(row=4, column=0)
-
+    password_entry = Entry(register_screen, textvariable=temp_password, show="*")
+    password_entry.grid(row=4, column=0)
+    show_password_var = BooleanVar()
+    show_password_checkbox = Checkbutton(register_screen, text="Show password", variable=show_password_var, command=lambda: toggle_password_visibility(password_entry, show_password_var.get()))
+    show_password_checkbox.grid(row=4, column=1)
+    
     # Buttons
     Button(register_screen, text="Register", command=finish_reg, font=('Calibri', 12)).grid(row=5, sticky=N, pady=10)
+
+    def toggle_password_visibility(password_entry, show_password):
+        if show_password:
+            password_entry.config(show="")
+        else:
+            password_entry.config(show="*")
+
 
 def login_session():
     global balance_label
@@ -170,7 +183,7 @@ def perform_transaction(transaction_type, amount):
 
     with open(account_file_path, "r+") as account_file:
         file_data = account_file.readlines()
-        print(file_data)  # Debug print statement
+        #print(file_data)  # Debug print statement
 
         if len(file_data) < 5:
             transaction_notif.config(fg="red", text="Account data is incomplete")
@@ -182,6 +195,11 @@ def perform_transaction(transaction_type, amount):
             transaction_notif.config(fg="red", text="Invalid balance value")
             return
 
+         # Get transaction logs
+        transaction_logs = file_data[5:]
+        transaction_logs = [log.strip() for log in transaction_logs]
+        
+        
         if transaction_type == "withdraw":
             if balance >= float(amount):
                 balance -= float(amount)
@@ -191,6 +209,10 @@ def perform_transaction(transaction_type, amount):
                 account_file.truncate()
                 balance_label.config(text="Balance: R{}".format(balance))
                 transaction_notif.config(fg="green", text="Withdrawal successful")
+                
+                # Add transaction log
+                transaction_log = "Withdrawal: R{}, Date-Time: {}".format(amount, datetime.now())
+                transaction_logs.append(transaction_log)
             else:
                 transaction_notif.config(fg="red", text="Insufficient funds")
         elif transaction_type == "deposit":
@@ -201,6 +223,16 @@ def perform_transaction(transaction_type, amount):
             account_file.truncate()
             balance_label.config(text="Balance: R{}".format(balance))
             transaction_notif.config(fg="green", text="Deposit successful")
+            
+             # Add transaction log
+            transaction_log = "Deposit: R{}, Date-Time: {}".format(amount, datetime.now())
+            transaction_logs.append(transaction_log)
+
+        # Write transaction logs back to file
+        for log in transaction_logs:
+            account_file.write(log + '\n')
+
+        account_file.truncate()
 
     #account_file.close()
 
@@ -250,6 +282,33 @@ def deposit():
     transaction_notif = Label(deposit_screen, font=('Calibri', 12))
     transaction_notif.grid(row=4, sticky=N, pady=10)
 
+#function to view the transaction logs
+def view_transaction_logs():
+    account_filename = temp_login_name.get()
+    account_file_path = os.path.join(os.getcwd(), account_filename)
+
+    if not os.path.exists(account_file_path):
+        print("Account not found")
+        return
+
+    with open(account_file_path, "r") as account_file:
+        file_data = account_file.readlines()
+
+        # Get transaction logs
+        transaction_logs = file_data[5:]
+        transaction_logs = [log.strip() for log in transaction_logs]
+
+        # Create a new window to display the logs
+        log_screen = Toplevel(master)
+        log_screen.title('Transaction Logs')
+
+        # Labels
+        Label(log_screen, text="Transaction Logs", font=('Calibri', 12)).grid(row=0, sticky=N, pady=10)
+
+        for i, log in enumerate(transaction_logs):
+            Label(log_screen, text=log, font=('Calibri', 12)).grid(row=i+1, sticky=W, padx=5)
+            
+            
 # Account Dashboard
 def show_account_dashboard(login_name):
     global balance_label
@@ -264,15 +323,10 @@ def show_account_dashboard(login_name):
     Label(account_dashboard, text="").grid(row=2, sticky=N, pady=5)
 
     # Buttons
-    Button(account_dashboard, text="Withdraw", font=('Calibri', 12), width=20, command=withdraw).grid(row=3,
-                                                                                                       sticky=N,
-                                                                                                       pady=10)
-    Button(account_dashboard, text="Deposit", font=('Calibri', 12), width=20, command=deposit).grid(row=4,
-                                                                                                     sticky=N,
-                                                                                                     pady=10)
-    Button(account_dashboard, text="Logout", font=('Calibri', 12), width=20, command=lambda: logout(account_dashboard)).grid(row=5,
-                                                                                                              sticky=N,
-                                                                                                              pady=10)
+    Button(account_dashboard, text="Withdraw", font=('Calibri', 12), width=20, command=withdraw).grid(row=3,sticky=N,pady=10)
+    Button(account_dashboard, text="Deposit", font=('Calibri', 12), width=20, command=deposit).grid(row=4,sticky=N,pady=10)
+    Button(account_dashboard, text="View Transaction Logs", font=('Calibri', 12), width=20, command=view_transaction_logs).grid(row=5, sticky=N, pady=10)
+    Button(account_dashboard, text="Logout", font=('Calibri', 12), width=20, command=lambda: logout(account_dashboard)).grid(row=5,sticky=N,pady=10)
 
     # Transaction Notification
     transaction_notif = Label(account_dashboard, font=('Calibri', 12))
