@@ -1,6 +1,7 @@
 # Imports
 from tkinter import *
 import os
+import re
 from PIL import Image, ImageTk
 
 # Main Screen
@@ -10,6 +11,16 @@ master.title('Banking App')
 # Global Variables
 transaction_notif = "None"
 
+#Function to validate password
+def validate_password(password):
+    if (len(password) >= 8 and 
+        re.search(r"\d", password) and
+        re.search(r"[a-z]", password) and
+        re.search(r"[A-Z]", password) and
+        re.search(r"[!@#$%^&*()_+{}:;\"'?<>,.\/\|\\-]", password)):
+        return True
+    else:
+        return False
 
 # Functions+
 notif:None
@@ -30,7 +41,28 @@ def finish_reg():
         if name == name_check:
             notif.config(fg="red", text="Account already exists")
             return
+        
+        
+     #Check if the password.txt file exists, create it if it does not exist
+    if not os.path.exists("passwords.txt"):
+        open("passwords.txt", "w").close()
 
+    with open("passwords.txt", "r") as f:
+        used_passwords = f.read().splitlines()
+
+    if password in used_passwords:
+        notif.config(fg="red", text="Password not avaible")
+        return
+    
+    if not validate_password(password):
+        notif.config(fg="red", text="Invalid password")
+        return
+
+    #Save password to file
+    with open("passwords.txt", "a") as f:
+        f.write(password + "\n")
+        
+    #User Account Data
     new_file = open(name, "w")
     new_file.write(name + '\n')
     new_file.write(password + '\n')
