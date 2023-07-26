@@ -101,12 +101,12 @@ def register():
    
 
     # Labels
-    Label(register_screen, text="Please enter your details below to register", font=('Calibri', 12)).grid(row=0, columnspan=2, sticky=N)
-    Label(register_screen, text="Name", font=('Calibri', 12)).grid(row=2, column=0, sticky=N)
-    Label(register_screen, text="Age", font=('Calibri', 12)).grid(row=3, column=0, sticky=N)
-    Label(register_screen, text="Gender", font=('Calibri', 12)).grid(row=4, column=0, sticky=N)
-    Label(register_screen, text="Password", font=('Calibri', 12)).grid(row=5, column=0, sticky=N)
-    notif = Label(register_screen, font=('Calibri', 12))
+    Label(register_screen, text="Please enter your details below to register", font=('Calibri', 12), bg='White').grid(row=0, columnspan=2, sticky=N)
+    Label(register_screen, text="Name", font=('Calibri', 12), bg='White').grid(row=2, column=0, sticky=N)
+    Label(register_screen, text="Age", font=('Calibri', 12), bg='White').grid(row=3, column=0, sticky=N)
+    Label(register_screen, text="Gender", font=('Calibri', 12), bg='White').grid(row=4, column=0, sticky=N)
+    Label(register_screen, text="Password", font=('Calibri', 12), bg='White').grid(row=5, column=0, sticky=N)
+    notif = Label(register_screen, font=('Calibri', 12), bg='White')
     notif.grid(row=9, sticky=N, pady=10)
 
     # Entries
@@ -176,10 +176,10 @@ def login():
         login_screen.destroy()
 
     # Labels
-    Label(login_screen, text="Login to your account", font=('Calibri', 12)).grid(row=0, column=2, columnspan=2, pady=4, padx=4, sticky='N')
-    Label(login_screen, text="Username", font=('Calibri', 12)).grid(row=1, column=0, columnspan=2, pady=5, sticky='NE')
-    Label(login_screen, text="Password", font=('Calibri', 12)).grid(row=2, column=0, columnspan=2, pady=5, sticky='NE')
-    login_notif = Label(login_screen, font=('Calibri', 12))
+    Label(login_screen, text="Login to your account", font=('Calibri', 12), bg='White').grid(row=0, column=2, columnspan=2, pady=4, padx=4, sticky='N')
+    Label(login_screen, text="Username", font=('Calibri', 12), bg='White').grid(row=1, column=0, columnspan=2, pady=5, sticky='NE')
+    Label(login_screen, text="Password", font=('Calibri', 12), bg='White').grid(row=2, column=0, columnspan=2, pady=5, sticky='NE')
+    login_notif = Label(login_screen, font=('Calibri', 12), bg='White')
     login_notif.grid(row=6,columnspan=2, column=2, pady=4, padx=4, sticky='N')
 
     # Entry
@@ -309,9 +309,9 @@ def withdraw():
         withdraw_screen.destroy()
         
     # Labels
-    Label(withdraw_screen, text="Withdraw", font=('Calibri', 15)).grid(row=0, columnspan=2,column=0, pady=5, padx=145)
-    Label(withdraw_screen, text="Amount Withdrawing:    R", font=('Calibri', 12)).grid(row=1, sticky=W, padx=10)
-    Label(withdraw_screen, text="").grid(row=2, sticky=N, pady=5)
+    Label(withdraw_screen, text="Withdraw", font=('Calibri', 15), bg='LightBlue').grid(row=0, columnspan=2,column=0, pady=5, padx=145)
+    Label(withdraw_screen, text="Amount Withdrawing:    R", font=('Calibri', 12), bg='LightBlue').grid(row=1, sticky=W, padx=10)
+    Label(withdraw_screen, text="", bg='LightBlue').grid(row=2, sticky=N, pady=5)
 
     # Entry
     withdraw_amount = IntVar()
@@ -323,7 +323,7 @@ def withdraw():
     Button(withdraw_screen, text="Cancel", command=cancel_withdrawal, width=15,font=('Calibri', 12), bg='Red').grid(row=3, column=1,sticky=N, pady=5)
     
     # Transaction Notification Label
-    transaction_notif = Label(withdraw_screen, font=('Calibri', 12))
+    transaction_notif = Label(withdraw_screen, font=('Calibri', 12), bg='LightBlue')
     transaction_notif.grid(row=5, sticky=N, pady=10)
     
     
@@ -333,26 +333,28 @@ def deposit():
 
     deposit_screen = Toplevel(master)
     deposit_screen.title('Deposit')
+    deposit_screen.geometry("400x200")
+    deposit_screen.configure(background='LightBlue')
 
     # function to close the login window
     def cancel_deposit():
         deposit_screen.destroy()
         
     # Labels
-    Label(deposit_screen, text="Deposit", font=('Calibri', 12)).grid(row=0, sticky=N, pady=10)
-    Label(deposit_screen, text="Amount:", font=('Calibri', 12)).grid(row=1, sticky=W)
-    Label(deposit_screen, text="").grid(row=2, sticky=N, pady=5)
+    Label(deposit_screen, text="Deposit", font=('Calibri', 15), bg='LightBlue').grid(row=0, columnspan=2, column=0, pady=5, padx=160)
+    Label(deposit_screen, text="Amount Depositing:  R", font=('Calibri', 12), bg='LightBlue').grid(row=1, sticky=W, padx=10)
+    Label(deposit_screen, text="", bg='LightBlue').grid(row=2, sticky=N, pady=5)
 
     # Entry
     deposit_amount = IntVar()
-    Entry(deposit_screen, textvariable=deposit_amount).grid(row=1, column=1, padx=5)
+    Entry(deposit_screen, textvariable=deposit_amount, width=30).grid(row=1, column=1, padx=5)
 
     # Button
-    Button(deposit_screen, text="Confirm", command=lambda:perform_transaction("deposit", deposit_amount.get()),
-           width=15, font=('Calibri', 12)).grid(row=3, sticky=W, pady=5, padx=5)
+    Button(deposit_screen, text="Confirm", command=lambda:perform_transaction("deposit", deposit_amount.get()), width=15, font=('Calibri', 12), bg='LightGreen').grid(row=3, sticky=W, pady=5, padx=30)
+    Button(deposit_screen, text="Cancel", command=cancel_deposit, width=15,font=('Calibri', 12), bg='Red').grid(row=3, column=1,sticky=N, pady=5)
 
     # Transaction Notification Label
-    transaction_notif = Label(deposit_screen, font=('Calibri', 12))
+    transaction_notif = Label(deposit_screen, font=('Calibri', 12), bg='LightBlue')
     transaction_notif.grid(row=4, sticky=N, pady=10)
 
 
@@ -367,10 +369,10 @@ def show_account_dashboard(login_name):
     account_dashboard.configure(background='White')
 
     # Labels
-    Label(account_dashboard, text="Welcome, " + login_name, font=('Calibri', 12)).grid(row=0, columnspan=2, column=0, sticky=N, pady=5, padx=125)
-    balance_label = Label(account_dashboard, text="Balance: R0", font=('Calibri', 12))
+    Label(account_dashboard, text="Welcome, " + login_name, font=('Calibri', 12), bg='White').grid(row=0, columnspan=2, column=0, sticky=N, pady=5, padx=125)
+    balance_label = Label(account_dashboard, text="Balance: R0", font=('Calibri', 12), bg='White')
     balance_label.grid(row=1, columnspan=2, column=0, sticky=N, pady=5, padx=125)
-    Label(account_dashboard, text="").grid(row=2, sticky=N, pady=5)
+    Label(account_dashboard, text="", bg='White').grid(row=2, sticky=N, pady=5)
 
     # Buttons
     Button(account_dashboard, text="Withdraw", font=('Calibri', 12), width=20, command=withdraw,  bg='LightGreen').grid(row=3, columnspan=2, column=0, pady=5, padx=125)
@@ -379,7 +381,7 @@ def show_account_dashboard(login_name):
     Button(account_dashboard, text="Logout", font=('Calibri', 12), width=20, command=lambda: logout(account_dashboard),  bg='LightBlue').grid(row=6, columnspan=2, column=0, pady=5, padx=125)
 
     # Transaction Notification
-    transaction_notif = Label(account_dashboard, font=('Calibri', 12))
+    transaction_notif = Label(account_dashboard, font=('Calibri', 12), bg='White')
     transaction_notif.grid(row=7, sticky=N, pady=10)
 
     # Load balance from file
@@ -399,8 +401,8 @@ img = img.resize((200, 170))
 img = ImageTk.PhotoImage(img)
 
 # Labels
-Label(master, text="BLACK PANTHERS BANK", font=('Calibri', 14)).grid(row=0, column=2, sticky=N, pady=5)
-Label(master, text="The most secure bank you've probably used", font=('Calibri', 12)).grid(row=1, column=2, pady=5, sticky=N)
+Label(master, text="BLACK PANTHERS BANK", font=('Calibri', 14), bg='White').grid(row=0, column=2, sticky=N, pady=5)
+Label(master, text="The most secure bank you've probably used", font=('Calibri', 12), bg='White').grid(row=1, column=2, pady=5, sticky=N)
 Label(master, image=img).grid(row=2, column=2, sticky=N, pady=15)
 
 # Buttons
